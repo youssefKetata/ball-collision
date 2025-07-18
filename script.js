@@ -45,6 +45,13 @@ class BallPhysics {
       '#fd79a8',
     ];
 
+    this.svgs = [
+      '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5-10-5-10 5z" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" fill="#fff"/></svg>',
+      '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 12l-4-4v3H3v2h15v3l4-4z" fill="#fff"/></svg>',
+    ];
+
     // Add document-level event listeners for dragging
     document.addEventListener('mousemove', (e) => this.handleMouseMove(e));
     document.addEventListener('mouseup', (e) => this.handleMouseUp(e));
@@ -70,6 +77,7 @@ class BallPhysics {
       const radius = size / 2;
       element.style.width = size + 'px';
       element.style.height = size + 'px';
+      element.innerHTML = this.svgs[index % this.svgs.length];
 
       const ball = {
         element: element,
@@ -390,6 +398,7 @@ class BallPhysics {
     newBall.style.width = size + 'px';
     newBall.style.height = size + 'px';
     newBall.style.borderRadius = '50%';
+    newBall.innerHTML = this.svgs[Math.floor(Math.random() * this.svgs.length)];
     container.appendChild(newBall);
 
     const containerRect = container.getBoundingClientRect();
