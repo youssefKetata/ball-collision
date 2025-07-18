@@ -151,6 +151,7 @@ class BallPhysics {
         if (speed < 0.1) {
           ball.vx *= 0.9;
           ball.vy *= 0.9;
+          ball.vrotation *= 0.9; // Add damping for rotation
         }
 
         // Wall collision detection with proper bounds checking
@@ -264,7 +265,7 @@ class BallPhysics {
     ball2.vy += impulseY / ball2.mass;
 
     // Adjust rotation on collision
-    const angularImpulse = (rvx * normalY - rvy * normalX) * 0.1; // Simplified angular impulse
+    const angularImpulse = (rvx * normalY - rvy * normalX) * 0.5; // Simplified angular impulse, increased for more noticeable effect
     ball1.vrotation -= angularImpulse / ball1.mass;
     ball2.vrotation += angularImpulse / ball2.mass;
 
@@ -648,6 +649,9 @@ class BallPhysics {
         ball.vx = velocity.vx;
         ball.vy = velocity.vy;
 
+        // Apply rotational velocity based on throw
+        ball.vrotation = (ball.vx * 0.05) + (ball.vy * 0.05); // Simple proportional rotation
+
         // Clear position history
         ball.dragPositions = [];
       }
@@ -675,6 +679,9 @@ class BallPhysics {
         const velocity = this.calculateThrowVelocity(ball);
         ball.vx = velocity.vx;
         ball.vy = velocity.vy;
+
+        // Apply rotational velocity based on throw
+        ball.vrotation = (ball.vx * 0.05) + (ball.vy * 0.05); // Simple proportional rotation
 
         // Clear position history
         ball.dragPositions = [];
