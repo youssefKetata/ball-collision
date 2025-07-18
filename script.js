@@ -96,6 +96,8 @@ class BallPhysics {
         dragStartTime: 0,
         dragPositions: [], // Store recent positions for better velocity calculation
         maxPositionHistory: 5, // Keep last 5 positions
+        rotation: 0, // Initial rotation angle
+        vrotation: (Math.random() - 0.5) * 5, // Initial rotational velocity
       };
 
       gsap.set(element, {
@@ -155,9 +157,11 @@ class BallPhysics {
         if (ball.x - ball.radius <= 0) {
           ball.x = ball.radius;
           ball.vx = -ball.vx * this.bounceDamping;
+          ball.vrotation *= -1; // Reverse rotation on wall hit
         } else if (ball.x + ball.radius >= containerWidth) {
           ball.x = containerWidth - ball.radius;
           ball.vx = -ball.vx * this.bounceDamping;
+          ball.vrotation *= -1; // Reverse rotation on wall hit
         }
         if (ball.y - ball.radius <= 0) {
           ball.y = ball.radius;
@@ -166,6 +170,7 @@ class BallPhysics {
           ball.y = containerHeight - ball.radius;
           ball.vy = -ball.vy * this.bounceDamping;
           ball.vx *= this.groundFriction;
+          ball.vrotation *= this.groundFriction; // Apply friction to rotation
         }
 
         // Additional bounds safety check (prevents balls from going outside on resize)
@@ -177,12 +182,16 @@ class BallPhysics {
           ball.radius,
           Math.min(containerHeight - ball.radius, ball.y)
         );
+
+        // Update rotation
+        ball.rotation += ball.vrotation;
       }
 
       // Update DOM position for all balls
       gsap.set(ball.element, {
         x: ball.x - ball.radius,
         y: ball.y - ball.radius,
+        rotation: ball.rotation, // Apply rotation
       });
     });
 
@@ -253,6 +262,11 @@ class BallPhysics {
     ball1.vy -= impulseY / ball1.mass;
     ball2.vx += impulseX / ball2.mass;
     ball2.vy += impulseY / ball2.mass;
+
+    // Adjust rotation on collision
+    const angularImpulse = (rvx * normalY - rvy * normalX) * 0.1; // Simplified angular impulse
+    ball1.vrotation -= angularImpulse / ball1.mass;
+    ball2.vrotation += angularImpulse / ball2.mass;
 
     // Apply additional damping to reduce oscillations
     const dampingFactor = 0.98;
@@ -418,6 +432,8 @@ class BallPhysics {
       dragStartTime: 0,
       dragPositions: [],
       maxPositionHistory: 5,
+      rotation: 0, // Initial rotation angle
+      vrotation: (Math.random() - 0.5) * 5, // Initial rotational velocity
     };
 
     gsap.set(newBall, {
